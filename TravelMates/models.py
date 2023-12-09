@@ -3,7 +3,10 @@ from django.db import models
 from helper.Choices import MOTHER_TONGUES
 from helper.Validators import phone_regex
 from django.core.validators import EmailValidator
+from helper.Funtions import Print
 from .manager import TravelMateManager
+from django.conf import settings
+import os
 
 
 class TravelMate(AbstractBaseUser, PermissionsMixin):
@@ -38,4 +41,12 @@ class TravelMate(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.phone
             
-        
+    def save(self, *args, **kwargs):
+        if not self.profile_pic:
+            default_image_path = os.path.join(settings.STATIC_ROOT, 'default/profile/image.png')
+            if os.path.exists(default_image_path):
+                self.profile_pic.save('default_profile_image.png', open(default_image_path, 'rb'), save=True)
+            else:
+                pass                
+        super().save(*args, **kwargs)
+    

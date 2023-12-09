@@ -12,7 +12,6 @@ class TravelMateManager(BaseUserManager):
         
         email = self.normalize_email(email)
         travel_mate = self.model(travel_mate_id = get_travel_mate_id(), phone = phone, email=email, **extra_fields)
-        Print(password)
         travel_mate.set_password(password)
         travel_mate.save(using=self._db)
         return travel_mate
