@@ -31,7 +31,7 @@ DEBUG = os.getenv('DEBUG')
 CUSTOM_VIEW_HANDLING = os.getenv('CUSTOM_VIEW_HANDLING')
 
 
-ALLOWED_HOSTS = ["travelmates.pythonanywhere.com"]
+ALLOWED_HOSTS = ["localhost","travelmates.pythonanywhere.com"]
 
 # Application definition
 
@@ -84,7 +84,7 @@ CORS_ALLOW_METHODS = (
     "POST",
 )
 ROOT_URLCONF = 'travelmate_project.urls'
-ANONYMOUS_PATHS = ['/travel-mates/login','/travel-mates/register','/travel-mates/forgot-password']
+ANONYMOUS_PATHS = ['/travel-mates/login','/travel-mates/register','/travel-mates/forgot-password','/travel-mates/otp-send','/travel-mates/otp-verification']
 
 
 
@@ -132,7 +132,8 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=60),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=100),
+    # "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=90),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Welcome to TravelMates</title>
+    <title>TravelMates - Forgot Password</title>
     <style>
         body {
             font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif, sans-serif;
@@ -58,7 +58,6 @@
             margin-bottom: 10px;
             color: #333;
         }
-
         .lt {
             font-size: 26px;
             margin-bottom: 10px;
@@ -76,14 +75,21 @@
             color: skyblue;
         }
 
-        ul {
-            list-style-type: disc;
-            padding-left: 20px;
+        .otp-container {
+            margin-top: 30px;
+            text-align: center;
         }
 
-        li {
-            font-size: 18px;
-            color: #333;
+        .otp-code {
+            font-size: 32px;
+            font-weight: bold;
+            color: skyblue;
+        }
+
+        .note {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #555;
         }
     </style>
 </head>
@@ -100,23 +106,17 @@
 
     <div id="main-content">
         <h1>Welcome to TravelMates, {{name}}!</h1>
-        <h2>About TravelMates</h2>
+        <h2>Forgot Password - OTP Verification</h2>
         <p>
-            TravelMates is your destination for connecting with fellow travelers from around the world. Whether you're an experienced globetrotter or planning your first solo adventure, TravelMates is here to help you find like-minded companions for your journey.
+            We received a request to reset your password. To proceed, please enter the One-Time Password (OTP) sent to your email.
         </p>
 
-        <h2>Key Features</h2>
-        <ul>
-            <li>Create and share your travel plans</li>
-            <li>Connect with travelers heading to the same destination</li>
-            <li>Chat with potential travel companions</li>
-            <li>Discover new travel buddies and explore the world together</li>
-            <li>Explore default trips from around the world and plan your adventure</li>
-            <li>Experience a community where users take care of responsibilities</li>
-        </ul>
+        <div class="otp-container">
+            <p class="otp-code">{{otp}}</p>
+        </div>
 
-        <p>
-            Join our community of travelers and make your next adventure unforgettable. TravelMates allows you to focus on the journey while connecting with other travelers who share your passion.
+        <p class="note">
+            Note: This OTP is valid for a limited time. Do not share it with anyone for security reasons.
         </p>
     </div>
 </body>

@@ -4,17 +4,21 @@ from helper.Choices import MOTHER_TONGUES
 from helper.Validators import phone_regex
 from django.core.validators import EmailValidator
 from helper.Funtions import Print
+from helper.Modals import DateTimeModal
+from helper.email import send_otp
 from .manager import TravelMateManager
 from django.conf import settings
+from django.utils import timezone
 import os
 
+OTP_TIME = 10
 
 class TravelMate(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(primary_key=True)
     travel_mate_id = models.CharField(unique=True,max_length=255)
     profile_pic = models.FileField(null=True,upload_to='profiles')
     first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30, null=True, blank=True)
     email = models.EmailField(unique=True,validators=[EmailValidator])
     contry_code = models.CharField(max_length=5)
     phone = models.CharField(max_length=10,unique=True,validators=[phone_regex])
@@ -36,7 +40,7 @@ class TravelMate(AbstractBaseUser, PermissionsMixin):
     objects = TravelMateManager()
 
     USERNAME_FIELD = 'phone'
-    REQUIRED_FIELDS = ['email','first_name', 'last_name','contry_code']
+    REQUIRED_FIELDS = ['email','first_name','contry_code']
 
     def __str__(self):
         return self.phone
@@ -50,3 +54,12 @@ class TravelMate(AbstractBaseUser, PermissionsMixin):
                 pass                
         super().save(*args, **kwargs)
     
+class Otp(DateTimeModal):
+    travel_mate = models.ForeignKey(TravelMate, to_field='travel_mate_id' , on_delete=models.CASCADE)
+    otp = models.CharField(max_length=6)
+    expiry_time = models.DateTimeField()
+    
+    def save(self, *args, **kwargs):
+        self.expiry_time = timezone.now() + timezone.timedelta(minutes=OTP_TIME)
+        send_otp(self.travel_mate.first_name,self.travel_mate.email,self.otp)
+        super(Otp, self).save(*args, **kwargs)
