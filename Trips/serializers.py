@@ -15,6 +15,7 @@ from django.utils.timezone import now
 class TripSerializer(serializers.ModelSerializer):
     trip_id = serializers.CharField(required=False)    
     travel_mate = serializers.PrimaryKeyRelatedField(queryset=TravelMate.objects.all(), required=False)  # Mark it as not required    travel_mate_name = serializers.CharField(required=False)    
+    travel_mate_profile = serializers.SerializerMethodField()
     distance = serializers.IntegerField(required=False)    
     description = serializers.CharField(required=False)
     likes = serializers.SerializerMethodField()
@@ -35,6 +36,8 @@ class TripSerializer(serializers.ModelSerializer):
         current_time = now()
         return humanize.naturaltime(current_time - trip_time).replace('from now', 'to go')
 
+    def get_travel_mate_profile(self, obj):
+        return obj.travel_mate.profile_pic.url
     
     def get_likes(self,obj):
         get_trip_likes = GetTripLikesView()
@@ -53,7 +56,7 @@ class TripSerializer(serializers.ModelSerializer):
         
     def get_connected_travel_mates(self,obj):
         requests_travel_mates_id = TripRequest.objects.filter(is_accepted = True).values_list('travel_mate',flat=True)
-        connected_travel_mates_data = TravelMateSerializer(TravelMate.objects.filter(travel_mate_id__in = requests_travel_mates_id),many=True).data
+        connected_travel_mates_data = TravelMateSerializer(TravelMate.objects.filter(travel_mate_id__in = requests_travel_mates_id),many=True, context = self.context).data
         return connected_travel_mates_data
     
     def get_is_requested(self,obj):
