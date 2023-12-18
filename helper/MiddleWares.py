@@ -10,6 +10,7 @@ class TravelMateRequestMiddleware(object):
         request.travel_mate=None
         # for anonymous paths
         if request.path in settings.ANONYMOUS_PATHS:
+                print(request.path)
                 response = self.get_response(request)
                 a=response.__dict__
                 return response        

@@ -1,8 +1,10 @@
 from django.urls import path
 from Interactions.Trips.Likes.views import CreateTripLike , GetTripLikesView
 from Interactions.Trips.Comments.views import CreateTripComment, GetTripCommentsView, CreateReplyToTripComment
-from Interactions.Trips.Requests.views import CreateTripRequest, GetTripRequestsView, TripRequestAcceptView
+from Interactions.Trips.Requests.views import (CreateTripRequest, DeleteRequest,
+    GetTripRequestsView, TripRequestAcceptView)
 from Interactions.Trips.Follow.views import FollowView,GetTravelMateFollowers,GetTravelMateFollowings
+from Interactions.views import InteractionsView
 
 urlpatterns = [
     # Trips-likes
@@ -17,10 +19,14 @@ urlpatterns = [
     # Trips-requests
     path('trips/requests/request',CreateTripRequest.as_view()),
     path('trips/requests/get-requests/<str:trip_id>',GetTripRequestsView.as_view()),
+    path('trips/requests/delete-request/<str:request_id>',DeleteRequest.as_view()),
     path('trips/requests/accept/<str:request_id>',TripRequestAcceptView.as_view()),
     
     # Followings
     path('followings/follow/<str:travel_mate_id>',FollowView.as_view()),
     path('followings/get-followers/<str:travel_mate_id>',GetTravelMateFollowers.as_view()),
-    path('followings/get-followings/<str:travel_mate_id>',GetTravelMateFollowings.as_view())
-]
+    path('followings/get-followings/<str:travel_mate_id>',GetTravelMateFollowings.as_view()),
+    
+    # Interactions
+    path('interactions',InteractionsView.as_view()),
+    ]

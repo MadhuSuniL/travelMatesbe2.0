@@ -112,3 +112,21 @@ def get_conversation_id():
 def get_message_id():
     message_id ='message_'+str(UUID())
     return str(message_id)
+
+
+def create_interaction(data,trip_name = None, base = None):
+    from Interactions.models import Interactions
+    if data.get('travel_mate') == data.get('interacter_travel_mate'):
+        return None
+    if data.get('type') == 'like':
+        data['info'] = f"{data.get('interacter_travel_mate').first_name} was liked your {trip_name} trip"
+    if data.get('type') == 'comment':
+        data['info'] = f"{data.get('interacter_travel_mate').first_name} was commented to your {trip_name} trip"
+    if data.get('type') == 'request':
+        if base == 'requested':
+            data['info'] = f"{data.get('interacter_travel_mate').first_name} was requested to your {trip_name} trip"
+        else:
+            data['info'] = f"{data.get('interacter_travel_mate').first_name} was accepted your request on {trip_name} trip"
+    if data.get('type') == 'follow':
+        data['info'] = f"{data.get('interacter_travel_mate').first_name} was {trip_name} you"
+    return Interactions.objects.create(**data)

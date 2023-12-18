@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from Interactions.models import TripRequest
-from helper.Funtions import get_trip_request_id
+from helper.Funtions import create_interaction, get_trip_request_id
 from TravelMates.models import TravelMate
 import humanize
 from django.utils.timezone import now
@@ -32,7 +32,13 @@ class TripRequestSerializer(serializers.ModelSerializer):
             trip_request = TripRequest.objects.get(trip = validated_data['trip'],travel_mate = validated_data['travel_mate'])
             msg = 'You have already requested to this trip'
         except TripRequest.DoesNotExist:
-            trip_request = TripRequest.objects.create(**validated_data)            
+            trip_request = TripRequest.objects.create(**validated_data)  
+            create_interaction({
+            'type' : 'request',
+            'travel_mate' : trip_request.trip.travel_mate,
+            'link' : f'/trip/{trip_request.trip.trip_id}',
+            'interacter_travel_mate' : self.context['request'].travel_mate,
+        },trip_request.trip.title,'requested')          
             msg = 'You have requested to this trip'
         return msg
 
