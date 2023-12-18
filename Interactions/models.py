@@ -42,8 +42,7 @@ class TripComment(DateTimeModal):
         if self.trip:
             self.trip_name = self.trip.title
         return super().save(*args, **kwargs)
-    
-    
+      
 class TripCommentReply(DateTimeModal):
     comment = models.ForeignKey(TripComment,to_field='comment_id',related_name='main_comment',on_delete=models.CASCADE)
     reply_comment = models.ForeignKey(TripComment,to_field='comment_id',related_name='reply_comment',on_delete=models.CASCADE)
@@ -66,7 +65,6 @@ class TripRequest(DateTimeModal):
             self.trip_name = self.trip.title
         return super().save(*args, **kwargs)
     
-    
 class Follower(models.Model):
     travel_mate = models.ForeignKey(TravelMate,to_field='travel_mate_id' ,on_delete=models.CASCADE, related_name='following_set')
     travel_mate_name = models.CharField(max_length=30)
@@ -84,3 +82,23 @@ class Follower(models.Model):
     
     def __str__(self):
         return f"{self.travel_mate.first_name} is followed by {self.follower.first_name}"
+    
+class Interactions(DateTimeModal):
+    type = models.CharField(max_length=50)
+    info = models.TextField()
+    link = models.CharField(null=True, max_length=50)
+    travel_mate = models.ForeignKey(TravelMate,to_field='travel_mate_id' ,on_delete=models.CASCADE, related_name='interactions')
+    travel_mate_name = models.CharField(max_length=30)
+    interacter_travel_mate = models.ForeignKey(TravelMate,to_field='travel_mate_id' ,on_delete=models.CASCADE, related_name='interactor')
+    interacter_travel_mate_name = models.CharField(max_length=30)
+    interacter_travel_mate_profile = models.CharField(max_length=200)
+    is_seen = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if self.travel_mate:            
+            self.travel_mate_name = self.travel_mate.first_name + ' ' + self.travel_mate.last_name
+        if self.interacter_travel_mate:
+            self.interacter_travel_mate_name = self.interacter_travel_mate.first_name + ' ' + self.interacter_travel_mate.last_name
+            self.interacter_travel_mate_profile = self.interacter_travel_mate.profile_pic.url
+        return super().save(*args, **kwargs)
+    

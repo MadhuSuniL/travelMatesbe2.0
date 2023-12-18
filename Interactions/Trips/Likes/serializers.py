@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from Interactions.models import TripLike
-from helper.Funtions import get_trip_like_id, Print
+from helper.Funtions import create_interaction, get_trip_like_id, Print
 from TravelMates.models import TravelMate
 
 class TripLikeSerializer(serializers.ModelSerializer):
@@ -8,7 +8,7 @@ class TripLikeSerializer(serializers.ModelSerializer):
     travel_mate_name = serializers.CharField(required=False)
     travel_mate = serializers.PrimaryKeyRelatedField(queryset=TravelMate.objects.all(),required = False)
     trip_name = serializers.CharField(required=False)
-    
+
     class Meta:
         model = TripLike
         fields = '__all__'
@@ -23,6 +23,12 @@ class TripLikeSerializer(serializers.ModelSerializer):
             is_liked = False
         except TripLike.DoesNotExist:
             trip_like = TripLike.objects.create(**validated_data)
+            create_interaction({
+            'type' : 'like',
+            'link' : f'/trip/{validated_data["trip"].trip_id}',
+            'travel_mate' : validated_data['trip'].travel_mate,
+            'interacter_travel_mate' : self.context['request'].travel_mate,
+        },validated_data['trip'].title)
             is_liked = True
         except Exception as e:
             raise e

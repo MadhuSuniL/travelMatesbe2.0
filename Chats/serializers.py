@@ -34,6 +34,7 @@ class MessageSerializer(serializers.ModelSerializer):
             return True
         else:
             return False
+        
  
     def create(self, validated_data):
         request = self.context['request']

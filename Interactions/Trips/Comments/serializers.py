@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from Interactions.models import TripComment, TripCommentReply
-from helper.Funtions import get_trip_comment_id, Print
+from helper.Funtions import create_interaction, get_trip_comment_id, Print
 from TravelMates.models import TravelMate
 from datetime import datetime, timedelta
 import humanize
@@ -33,6 +33,12 @@ class TripCommentSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['travel_mate'] = self.context['request'].travel_mate
         validated_data['comment_id'] = get_trip_comment_id()
+        create_interaction({
+            'type' : 'comment',
+            'travel_mate' : validated_data['trip'].travel_mate,
+            'link' : f'/trip/{validated_data["trip"].trip_id}',
+            'interacter_travel_mate' : self.context['request'].travel_mate,
+        },validated_data['trip'].title)
         return super().create(validated_data)    
 
 
