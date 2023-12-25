@@ -28,20 +28,13 @@ class TravelMateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         email_sent = validated_data.get('email_sent', False)
         del validated_data['email_sent']
-        print(validated_data)
         travel_mate = TravelMate.objects.create_travel_mate(**validated_data)
-        if email_sent:
-            welcome_wtih_credentials(travel_mate.first_name, travel_mate.email, validated_data['phone'], validated_data['password'])
-        else:        
-            welcome(travel_mate.first_name, travel_mate.email)
+        try:
+            if email_sent:
+                welcome_wtih_credentials(travel_mate.first_name, travel_mate.email, validated_data['phone'], validated_data['password'])
+            else:        
+                welcome(travel_mate.first_name, travel_mate.email)
+        except:
+            pass
         return travel_mate
     
-    # def to_representation(self, instance):
-    #     from Interactions.Trips.Follow.views import GetTravelMateFollowers
-    #     view = self.context.get('view')
-    #     if isinstance(view, GetTravelMateFollowers):
-    #         excluded_fields = ['field1', 'field2']  # Replace with the fields you want to exclude
-    #         for field in excluded_fields:
-    #             self.fields.pop(field, None)
-
-    #     return super().to_representation(instance)

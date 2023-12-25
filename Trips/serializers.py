@@ -9,6 +9,7 @@ from Interactions.Trips.Requests.views import GetTripRequestsView
 from TravelMates.serializers import TravelMateSerializer
 import humanize
 from django.utils.timezone import now
+from Interactions.Trips.Requests.serializers import TripRequestSerializer
 
 
 
@@ -50,12 +51,12 @@ class TripSerializer(serializers.ModelSerializer):
         return commnets_data   
         
     def get_requests(self,obj):
-        get_trip_requests = GetTripRequestsView()
-        requests_data =  get_trip_requests.get(request = self.context['request'], trip_id = obj.trip_id).data
+        get_trip_requests = TripRequest.objects.filter(trip = obj)
+        requests_data =  TripRequestSerializer(get_trip_requests, many = True, context = self.context).data
         return requests_data   
         
     def get_connected_travel_mates(self,obj):
-        requests_travel_mates_id = TripRequest.objects.filter(is_accepted = True).values_list('travel_mate',flat=True)
+        requests_travel_mates_id = TripRequest.objects.filter(trip = obj ,is_accepted = True).values_list('travel_mate',flat=True)
         connected_travel_mates_data = TravelMateSerializer(TravelMate.objects.filter(travel_mate_id__in = requests_travel_mates_id),many=True, context = self.context).data
         return connected_travel_mates_data
     

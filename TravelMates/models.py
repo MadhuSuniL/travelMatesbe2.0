@@ -18,7 +18,7 @@ class TravelMate(AbstractBaseUser, PermissionsMixin):
     travel_mate_id = models.CharField(unique=True,max_length=255)
     profile_pic = models.FileField(null=True,upload_to='profiles')
     first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30, null=True, blank=True)
+    last_name = models.CharField(max_length=30, null=True, blank=True, default = '')
     email = models.EmailField(unique=True,validators=[EmailValidator])
     contry_code = models.CharField(max_length=5)
     phone = models.CharField(max_length=10,unique=True,validators=[phone_regex])
