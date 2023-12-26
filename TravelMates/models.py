@@ -37,6 +37,8 @@ class TravelMate(AbstractBaseUser, PermissionsMixin):
     groups = None
     user_permissions = None
 
+    is_online = models.BooleanField(default=False)
+
     objects = TravelMateManager()
 
     USERNAME_FIELD = 'phone'
