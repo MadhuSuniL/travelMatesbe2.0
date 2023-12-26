@@ -85,6 +85,7 @@ CORS_ALLOW_METHODS = (
 )
 ROOT_URLCONF = 'travelmate_project.urls'
 ANONYMOUS_PATHS = ['/travel-mates/login','/travel-mates/register','/travel-mates/forgot-password','/travel-mates/otp-send','/travel-mates/otp-verification']
+ASGI_ALLOWED_HOSTS = CORS_ALLOWED_ORIGINS
 
 
 
@@ -132,8 +133,8 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=100),
-    # "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    # "ACCESS_TOKEN_LIFETIME": timedelta(minutes=100),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=90),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
@@ -143,6 +144,14 @@ SIMPLE_JWT = {
     "USER_ID_CLAIM": "travel_mate_id"
     }
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(os.getenv('REDIS_HOST'),os.getenv('REDIS_PORT'))],
+        },
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

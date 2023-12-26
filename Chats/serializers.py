@@ -49,7 +49,8 @@ class MessageSerializer(serializers.ModelSerializer):
 class ConversationSerializer(serializers.ModelSerializer):
     conversation_id = serializers.CharField(required=False)  
     travel_mate = serializers.SerializerMethodField()
-    
+    last_message = serializers.SerializerMethodField()
+
     def get_travel_mate(self,obj):
         travel_mate = self.context['request'].travel_mate
         if travel_mate == obj.to_travel_mate:
@@ -57,6 +58,16 @@ class ConversationSerializer(serializers.ModelSerializer):
         else:
             return TravelMateSerializer(obj.to_travel_mate, context = self.context).data
       
+    def get_last_message(self, obj):
+        travel_mate = self.context['request'].travel_mate
+        messages = Message.objects.filter(conversation = obj)
+        if len(messages):
+            last_message = messages.order_by('-create_at').first()
+            if last_message.travel_mate == travel_mate:
+                return f'You : {last_message.message}'
+            return f'{last_message.travel_mate.first_name} : {last_message.message}'      
+        return ''      
+
     class Meta:
         model = Conversation
         exclude = ['id']
