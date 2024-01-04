@@ -24,11 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-SECRET_KEY = os.getenv('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG')
-CUSTOM_VIEW_HANDLING = os.getenv('CUSTOM_VIEW_HANDLING')
+SECRET_KEY = 'django-insecure-%3r)a^34)r7^c0+yu)wy%*3d-b@ldk61h_6dheeyo8)4q=iy)1'
+DEBUG = False
+CUSTOM_VIEW_HANDLING = True
 
 
 ALLOWED_HOSTS = ["localhost","travelmates.pythonanywhere.com"]
@@ -42,19 +41,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     #Third party apps
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
-    
+
     #main apps
     'TravelMates',
     'Trips',
     'Chats',
     'Interactions',
     'Explore',
-    
+
     #Fake data
     'FakeDataGenarator'
 ]
@@ -111,16 +110,24 @@ WSGI_APPLICATION = 'travelmate_project.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': os.getenv('DB_ENGINE'),
+#         'NAME': os.getenv('DB_NAME'),
+#         'USER': os.getenv('DB_USER'),
+#         'HOST': os.getenv('DB_HOST'),
+#         'PASSWORD': os.getenv('DB_PASSWORD'),
+#         'PORT': os.getenv('DB_PORT'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('DB_ENGINE'),
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'HOST': os.getenv('DB_HOST'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'PORT': os.getenv('DB_PORT'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / "db.sqlite3",
     }
 }
+
 
 
 
@@ -171,14 +178,23 @@ TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 
+# # Email configuration
+# EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+# EMAIL_HOST = os.getenv('EMAIL_HOST')
+# EMAIL_PORT = int(os.getenv('EMAIL_PORT'))
+# EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS').lower() == 'true'
+# EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+# DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+
 # Email configuration
-EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
-EMAIL_HOST = os.getenv('EMAIL_HOST')
-EMAIL_PORT = int(os.getenv('EMAIL_PORT'))
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS').lower() == 'true'
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'travelmates247@gmail.com'
+EMAIL_HOST_PASSWORD = 'ipzi aoog adxo yipx'  # Replace with your Gmail app password
+DEFAULT_FROM_EMAIL = 'travelmates247@gmail.com'
 
 
 # Static files (CSS, JavaScript, Images)
